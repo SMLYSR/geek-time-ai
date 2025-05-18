@@ -3,7 +3,7 @@ import path from "path";
 import { OpenAI } from "openai";
 
 const openai = new OpenAI({
-  apiKey: "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",
+  apiKey: "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",
   baseURL: "https://openrouter.ai/api/v1"
   // baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
   // apiKey: "sk-310514eac1bf408c8a74198d13189d5a",
@@ -89,16 +89,20 @@ async function main() {
     }
 
     messages.push(response.choices[0].message);
+    console.log("messages：", messages);
 
     let actionMatch = responseText.match(/Action: \s*(\w+)/);
     let actionInputMatch = responseText.match(/Action Input:\s*({.*?}|".*?")/s);
-
+    
+    console.log("actionMatch:", actionMatch);
+    console.log("actionInputMatch:", actionInputMatch);
     if (actionMatch && actionInputMatch) {
       let toolName = actionMatch[1];
       let rawInput = actionInputMatch[1];
       let params = JSON.parse(rawInput);
 
       if (toolName === 'get_weather') {
+        console.log("开始调用本地工具: 参数为：", toolName, params.city);
         let observation = get_weather(params.city);
         console.log("人类的回复：observation:", observation);
 
